@@ -33,10 +33,10 @@ def compare_days(reference, high_load):
             # общее время выполнения нагрузки; эталона; разница; разница в %; разница в % от суммы общего времени вып. всех методов
             result_dict[method] = dict(hi_duration_sum=high_load[method]['duration_sum'],
                                        ref_duration_sum=reference[method]['duration_sum'],
-                                       diff_duration_sum=high_load[method]['duration_sum'] - reference[method]['ref_duration_sum'],
+                                       diff_duration_sum=high_load[method]['duration_sum'] - reference[method]['duration_sum'],
                                        diff_perc_duration_sum=round(
                                            ((high_load[method]['duration_sum'] - reference[method]['duration_sum']) / reference[method]['duration_sum'] * 100), 2),
-                                       diff_perc_duration_all=round((high_load[method]['duration_sum_diff'] / duration_all * 100), 2),
+                                       diff_perc_duration_all=round(((high_load[method]['duration_sum'] - reference[method]['duration_sum']) / duration_all * 100), 2),
                                        # среднее время выполнения нагрузки; эталона; разница; разница в %
                                        hi_duration_avg=high_load[method]['duration_sum'],
                                        ref_duration_avg=reference[method]['duration_sum'],
@@ -55,16 +55,16 @@ def compare_days(reference, high_load):
                                        duration_max_diff=high_load[method]['duration_max'] - reference[method]['duration_max'],
                                        duration_max_diff_perc=round(((high_load[method]['duration_max'] - reference[method]['duration_max']) / reference[method][
                                            'duration_max'] * 100), 2),
+                                       # ответственный за метод
                                        responsible=high_load[method]['responsible'])
         else:
             # метод не найден (новый метод) - не учитываем его
             print(f"Метод {method} не найден в эталоне")
-            print(f'Общая продолжительность выполнения методов - {duration_all}')
-    return high_load
+    return result_dict
 
 
 def sort_dict(src_dict: dict):
-    sorted_tuples = sorted(src_dict.items(), key=lambda item: item[1].get('duration_all_diff_perc', 0), reverse=True)
+    sorted_tuples = sorted(src_dict.items(), key=lambda item: item[1].get('diff_perc_duration_all', 0), reverse=True)
     sorted_dict = {k: v for k, v in sorted_tuples}
     for i in sorted_dict:
         print(sorted_dict[i])
